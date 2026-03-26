@@ -9,8 +9,13 @@ Use a FOR loop to display **even numbers** between 1 and 20.
 echo "<b> Exercise 7 </b>";
 echo "<br>";
 
-/*
+for ($i = 1; $i <= 20; $i++){
+    if ($i % 2 == 0){
+        echo $i . " ";
+    }
+}
 
+/*
 Exercise 8
 Use a WHILE loop to display numbers **counting down** from 10 to 1.
 */
@@ -22,6 +27,7 @@ while ($count <= 10 && $count > 0){
     echo $count--;
 }
 echo "<br>";
+
 /*
 Exercise 9
 Create an array of 5 colors.
@@ -35,6 +41,7 @@ foreach ($colors as $color){
     echo "I like ". $color;
 }
 echo "<br>";
+
 /*
 Exercise 10
 Use IF-ELSE inside a loop:
@@ -45,9 +52,14 @@ echo "<b> Exercise 10 </b>";
 $numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 foreach ($numbers as $number){
-    
+    if ($number % 2 == 0){
+        echo "<br>";
+        echo $number . " is Even";
+    } else {
+        echo "<br>";
+        echo $number . " is Odd";
+    }
 }
-
 
 /*
 Exercise 11
@@ -62,13 +74,25 @@ $prices = [
     "Yam" => 800
 ];
 
+$total_cost = 0;
+foreach ($prices as $item => $price){
+    $total_cost += $price;
+
 /* 
 Exercise 12
 Create a simple **countdown timer** 
 using a FOR loop that counts from 5 to 1 and then prints "Blast off!".
 */
+echo "<br>";
+echo "<b> Exercise 12 </b>";
 
-for ($countdown = 5; $countdown <= 5; $countdown--)
+for ($i = 5; $i > 0; $i--){
+    echo "<br>";
+    echo $i;
+}
+echo "<br>";
+echo "Blast off!";
+
 /*
 Exercise 13
 Create an array of 5 animals.
@@ -77,6 +101,16 @@ Use a loop to display **only animals that start with a vowel** (A, E, I, O, U).
 Use a loop to display:
 We have [quantity] [item](s) in stock.
 */
+echo "<br>";
+echo "<b> Exercise 13 </b>";
+$animals = ["Elephant", "Dog", "Ostrich", "Cat", "Ant"];
+foreach ($animals as $animal){
+    if (in_array(strtoupper($animal[0]), ["A", "E", "I", "O", "U"])){
+        echo "<br>";
+        echo $animal;
+    }
+}
+
 /*
 Exercise 14
 Combine arrays:
@@ -85,4 +119,14 @@ $fruits1 = ["Apple", "Banana"];
 $fruits2 = ["Orange", "Mango"];
 Merge them and display all fruits using a loop.
 */
+echo "<br>";
+echo "<b> Exercise 14 </b>";
+$fruits1 = ["Apple", "Banana"];
+$fruits2 = ["Orange", "Mango"];
+$all_fruits = array_merge($fruits1, $fruits2);
+foreach ($all_fruits as $fruit){
+    echo "<br>";
+    echo $fruit;
+}
+
 ?>

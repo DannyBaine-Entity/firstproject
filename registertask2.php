@@ -50,7 +50,7 @@ if(isset($_POST['register'])) {
    
         
     $sql = "INSERT INTO students_info (first_name, last_name, age, grade, enrollment_date, gender) 
-            VALUES ('$first_name', '$last_name', $age,'$grade', '$enrollment_date', '$gender')";
+            VALUES ('$first_name', '$last_name', $age, '$grade', '$enrollment_date', '$gender')";
 
             
 
