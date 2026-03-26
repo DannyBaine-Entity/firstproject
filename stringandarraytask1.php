@@ -1,13 +1,13 @@
 <?php
-$Fruits = ["Apple", "Orange", "Pineapple", "Banana", "Lime"];
+$fruits = ["Apple", "Orange", "Pineapple", "Banana", "Lime"];
 
-echo "First Fruit: " . $Fruits[0];
-echo "<br> Third Fruit: " . $Fruits[2];
+echo "First Fruit: " . $fruits[0];
+echo "<br> Third Fruit: " . $fruits[2];
 
-array_push($Fruits, "Grapes");
-echo "<br>Fruit added: " . $Fruits[5];
+array_push($fruits, "Grapes");
+echo "<br>Fruit added: " . $fruits[5];
 
 echo "<br> Total Fruits: " . count($Fruits);
-print_r($Fruits)
+print_r($fruits)
 
 ?>
