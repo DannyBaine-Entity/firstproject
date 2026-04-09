@@ -20,6 +20,7 @@ age	        INT
 grade	 VARCHAR(10)	
 enrollment_date	DATE	
 gender    ENUM('male', 'female')
+email VARCHAR(100)
 
 
 Tasks
@@ -33,33 +34,31 @@ Insert at least 5 sample student records into students_info.
 Extra Challenge (Optional)
 
 Add a new column email to the students_info table.*/
+session_start();
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=school_records", "root", "");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$conn = new PDO("mysql:host=localhost;dbname=school_records", "root", "");
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Handle form submission
+    if(isset($_POST['register'])) {
+        $first_name = trim($_POST['first_name']);
+        $last_name = trim($_POST['last_name']);
+        $age = $_POST['age'];
+        $grade = $_POST['grade'];
+        $enrollment_date = $_POST['enrollment_date'];
+        $gender = $_POST['gender'];
+        $email = $_POST['email']
 
-$message = "";
+    
+$sql = "INSERT INTO students_info (first_name, last_name, age, grade, enrollment_date, gender, email) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-// Handle form submission
-if(isset($_POST['register'])) {
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $age = $_POST['age'];
-    $grade = $_POST['grade'];
-    $enrollment_date = $_POST['enrollment_date'];
-    $gender = $_POST['gender'];
-   
         
-    $sql = "INSERT INTO students_info (first_name, last_name, age, grade, enrollment_date, gender) 
-            VALUES ('$first_name', '$last_name', $age, '$grade', '$enrollment_date', '$gender')";
-
-            
-
-    try {
-        $conn->exec($sql);
-        $message = "Student Added Successfully!";
-    } catch (PDOException $e) {
-        $message = "Student Addition failed: " . $e->getMessage();
-    }
+    $conn->exec($sql);
+    $message = "Student Added Successfully!";
+} catch (PDOException $e) {
+    echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
+}
 }
 
 
@@ -86,6 +85,8 @@ if(isset($_POST['register'])) {
             <option value="">select an option</option>
                 <option value="male">male</option>
                 <option value="female">female</option>
+        email:<br>
+        <input type="email" name="email" required><br>
 
         <input type="submit" name="register" value="Register">
     </form>

@@ -1,87 +1,78 @@
 <?php
-
-/* Library Book Registration System
-
-Description: Students create a database to keep track of books in a small library.
-
-Database & Table Details:
-
-Database Name: library_db
-
-Table Name: books
-
-Table Structure:
-
-Column Name	Data Type	Description
-book_id	INT PRIMARY KEY	Unique ID for each book
-title	VARCHAR(100)	Title of the book
-author	VARCHAR(50)	Author name
-published_year	YEAR	Year the book was published
-genre	ENUM('Adventure', 'Historical Fiction', 'Mystery', 'Thriller', 'Fantasy', 'Science Fiction', 'Dystopian', 'Magical Realism', 'Romance', 'Contemporary Fiction', 'Coming-of-Age', 'Horror', 'Supernatural', 'Graphic Novels')	Book genre
-
-CREATE TABLE books (
-    book_id INT PRIMARY KEY,
-    title VARCHAR(100),
-    author VARCHAR(50),
-    published_year YEAR,
-    genre ENUM(
-        'Adventure',
-        'Historical Fiction',
-        'Mystery',
-        'Thriller',
-        'Fantasy',
-        'Science Fiction'
-    )
-);
-
-
-*/
-
-$conn = new PDO("mysql:host=localhost;dbname=library_db", "root", "");
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+// ==========================================
+// Library Book Registration (PDO + Validation)
+// ==========================================
 
 $message = "";
 
-// Handle form submission
-if(isset($_POST['submit'])) {
-    $title = $_POST['title'];
-    $author= $_POST['author'];
-    $published_year = $_POST['year'];
-    $genre = $_POST['genre'];
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=library_db", "root", "");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        
-    $sql = "INSERT INTO books(title, author, year, genre) 
-            VALUES ('$title', '$author', '$published_year', '$genre')";
+    if(isset($_POST['submit'])) {
 
-            
+        $title = trim($_POST['title']); // TRIm removes the whitespaces preceeding the values entered
+        $author = trim($_POST['author']);
+        $published_year = $_POST['published_year'];
+        $genre = $_POST['genre'];
 
-    try {
-        $conn->exec($sql);
-        $message = "Registered successfully!";
-    } catch (PDOException $e) {
-        $message = "Registration failed: " . $e->getMessage();
+        // ✅ VALIDATION
+        if(empty($title) || empty($author) || empty($published_year) || empty($genre)) {
+            $message = "All fields are required!";
+        } elseif(!is_numeric($published_year)) {
+            $message = "Published year must be a number!";
+        } else {
+
+            // ✅ INSERT USING PREPARED STATEMENT
+            $sql = "INSERT INTO books (title, author, published_year, genre) 
+                    VALUES (?, ?, ?, ?)"; // PREVENTS SQL INJECTIONS
+
+            $stmtInsert = $conn->prepare($sql);
+            $stmtInsert->execute([$title, $author, $published_year, $genre]);
+            // ✅ SUCCESS MESSAGE
+            $message = "✅ Book registered successfully!";
+        }
     }
-}
 
+} catch (PDOException $e) {
+    $message = "Registration failed!";
+}
 ?>
+
 <!DOCTYPE html>
 <html>
-<head><title>Register</title></head>
+<head><title>Library</title></head>
 <body>
-    <h2>Register</h2>
-    <?php if($message != "") echo "<p>$message</p>"; ?>
-    <form method="post">
-        Title:<br>
-        <input type="text" name="title" required><br>
-        Author:<br>
-        <input type="text" name="author" required><br>
-        Year:<br>
-        <input type="text" name="year" required><br>
-        Genre:
-        <input type="text" name="genre" required><br><br>
-        
-        <input type="submit" name="submit" value="Register">
-    </form>
+
+<h2>Register Book</h2>
+
+<?php if($message != "") echo "<p>$message</p>"; ?>
+
+<form method="post">
+
+    Title:<br>
+    <input type="text" name="title" required><br>
+
+    Author:<br>
+    <input type="text" name="author" required><br>
+
+    Published Year:<br>
+    <input type="number" name="published_year" required><br>
+
+    Genre:<br>
+    <select name="genre" required>
+        <option value="">Select an option</option>
+        <option value="Adventure">Adventure</option>
+        <option value="Historical Fiction">Historical Fiction</option>
+        <option value="Mystery">Mystery</option>
+        <option value="Thriller">Thriller</option>
+        <option value="Fantasy">Fantasy</option>
+        <option value="Science Fiction">Science Fiction</option>
+    </select><br><br>
+
+    <input type="submit" name="submit" value="Register">
+
+</form>
+
 </body>
 </html>
