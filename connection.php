@@ -5,7 +5,7 @@ session_start();
 
 
 $host = 'localhost';
-$dbname = 'school_records';
+$dbname = 'testdb';
 $username = 'root';
 $password = '';
 

@@ -9,7 +9,7 @@ if(!isset($_SESSION['email'])) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM students_info WHERE email = ?");
+    $stmt = $pdo2->prepare("SELECT * FROM students_info WHERE email = ?");
     $stmt->execute([$_SESSION['email']]);
     $student = $stmt->fetch();
 
