@@ -8,8 +8,6 @@ if(!isset($_SESSION['email']) || $_SESSION['rolez'] != 1) {
 }
 
 try {
-   
-
     if(isset($_POST['create'])) {
         $username = trim($_POST['username']);
         $email = trim($_POST['email']);

@@ -1,6 +1,6 @@
 <?php
 
-include "conn2.php";
+include "connection2.php";
 
 // GET ID AND FETCH DATA
 if(isset($_GET['id'])) {

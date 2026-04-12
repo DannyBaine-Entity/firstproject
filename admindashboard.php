@@ -4,7 +4,7 @@
 // Student Dashboard (Simple + Beginner Friendly)
 // ==============================================
 
-session_start();
+include "connection2.php";
 
 // CHECK IF USER IS LOGGED IN
 if(!isset($_SESSION['email'])) {

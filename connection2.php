@@ -1,5 +1,7 @@
 <?php
 // Database connection settings for second database
+session_start();
+
 $host = 'localhost';
 $dbname = 'school_records';
 $username = 'root';
