@@ -1,12 +1,10 @@
 <?php
 
-try {
-    // DATABASE CONNECTION
-    $conn = new PDO("mysql:host=localhost;dbname=school_records", "root", "");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+include "connection2.php";
 
+try {
     // FETCH ALL STUDENTS
-    $stmt = $conn->prepare("SELECT * FROM students_info ");
+    $stmt = $pdo2->prepare("SELECT * FROM students_info ");
     $stmt->execute();
     $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -106,7 +104,7 @@ try {
 
                 echo "<tr>";
                 
-                echo "<td>" . $row['student_id'] . "</td>"; // ✅ ID column
+                echo "<td>" . $row['id'] . "</td>"; // ✅ ID column
                 echo "<td>" . $row['first_name'] . "</td>";
                 echo "<td>" . $row['last_name'] . "</td>";
                 echo "<td>" . $row['age'] . "</td>";
@@ -117,8 +115,8 @@ try {
                 echo "<td>" . ($row['image'] ? "<img src='" . $row['image'] . "' width='50' alt='Image'>" : "No Image") . "</td>";
 
                 echo "<td>
-                        <a href='update.php?id=".$row['student_id']."'>Update</a> |
-                        <a href='delete.php?id=".$row['student_id']."'>Delete</a>
+                        <a href='update.php?id=".$row['id']."'>Update</a> |
+                        <a href='delete.php?id=".$row['id']."'>Delete</a>
                       </td>";
 
                 echo "</tr>";

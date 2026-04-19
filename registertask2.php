@@ -35,6 +35,7 @@ Extra Challenge (Optional)
 
 Add a new column email to the students_info table.*/
 session_start();
+$message = "";
 try {
     $conn = new PDO("mysql:host=localhost;dbname=school_records", "root", "");
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -47,18 +48,17 @@ try {
         $grade = $_POST['grade'];
         $enrollment_date = $_POST['enrollment_date'];
         $gender = $_POST['gender'];
-        $email = $_POST['email']
-
-    
-$sql = "INSERT INTO students_info (first_name, last_name, age, grade, enrollment_date, gender, email) 
+        $email = $_POST['email'];
+        
+        $sql = "INSERT INTO students_info (first_name, last_name, age, grade, enrollment_date, gender, email) 
         VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        
-    $conn->exec($sql);
-    $message = "Student Added Successfully!";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$first_name, $last_name, $age, $grade, $enrollment_date, $gender, $email]);
+        $message = "Student Added Successfully!";
+    }
 } catch (PDOException $e) {
     echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
-}
 }
 
 
@@ -85,6 +85,7 @@ $sql = "INSERT INTO students_info (first_name, last_name, age, grade, enrollment
             <option value="">select an option</option>
                 <option value="male">male</option>
                 <option value="female">female</option>
+          </select><br>
         email:<br>
         <input type="email" name="email" required><br>
 

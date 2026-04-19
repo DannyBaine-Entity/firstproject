@@ -77,7 +77,7 @@ $prices = [
 $total_cost = 0;
 foreach ($prices as $item => $price){
     $total_cost += $price;
-
+}
 /* 
 Exercise 12
 Create a simple **countdown timer** 

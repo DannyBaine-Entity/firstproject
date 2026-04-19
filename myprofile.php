@@ -15,7 +15,7 @@ try {
     $student = $stmt->fetch();
 
     if (!$student) {
-        header("Location: index.php");
+        echo "<script>alert('Your profile is not set up yet. Please contact the administrator.'); window.location.href = 'studentdashboard.php';</script>";
         exit();
     }
 } catch (PDOException $e) {
@@ -85,7 +85,8 @@ try {
     <?php if($student['image']) { ?>
         <img src="<?php echo $student['image']; ?>" alt="Profile Image" width="150"><br><br>
     <?php } ?>
-    <p><strong>Student ID:</strong> <?php echo $student['student_id']; ?></p>
+    
+    <p><strong>Student ID:</strong> <?php echo $student['id']; ?></p>
     <p><strong>First Name:</strong> <?php echo $student['first_name']; ?></p>
     <p><strong>Last Name:</strong> <?php echo $student['last_name']; ?></p>
     <p><strong>Age:</strong> <?php echo $student['age']; ?></p>
@@ -93,6 +94,8 @@ try {
     <p><strong>Enrollment Date:</strong> <?php echo date('d-m-Y', strtotime($student['enrollment_date'])); ?></p>
     <p><strong>Gender:</strong> <?php echo $student['gender']; ?></p>
     <p><strong>Email:</strong> <?php echo $student['email']; ?></p>
+    <p><a href="uploadimage.php">Upload/Change Profile Image</a></p>
+    <p><a href="changepassword.php">Change Password</a></p>
 </div>
 
 </body>

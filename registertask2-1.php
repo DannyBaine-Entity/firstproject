@@ -35,8 +35,8 @@ try {
 
             // SQL QUERY
             $sql = "INSERT INTO students_info
-                    (first_name, last_name, age, grade, enrollment_date, gender, email)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    (first_name, last_name, age, grade, enrollment_date, gender, email, image)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $conn->prepare($sql);
 
@@ -145,6 +145,11 @@ try {
         <!-- Email (Optional) -->
         <label for="email">Email</label>
         <input type="email" name="email" id="email"><br><br>
+
+        <!-- Image (Optional) -->
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image" accept="image/*"><br><br>
+
 
         <!-- Submit Button -->
         <input type="submit" name ="submit" value="Submit">

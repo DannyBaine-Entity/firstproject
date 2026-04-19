@@ -6,10 +6,10 @@ include "connection2.php";
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    $stmtCheck = $conn->prepare("SELECT * FROM students_info WHERE student_id = ?");
+    $stmtCheck = $pdo2->prepare("SELECT * FROM students_info WHERE id = ?");
     $stmtCheck->execute([$id]);
 
-    $stmt = $conn->prepare("SELECT * FROM students_info WHERE student_id = ?");
+    $stmt = $pdo2->prepare("SELECT * FROM students_info WHERE id = ?");
     $stmt->execute([$id]);
     $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -48,9 +48,9 @@ if(isset($_POST['update'])) {
         }
     }
 
-    $stmt = $conn->prepare("UPDATE students_info
+    $stmt = $pdo2->prepare("UPDATE students_info
         SET first_name=?, last_name=?, age=?, grade=?, enrollment_date=?, gender=?, email=?, image=?
-        WHERE student_id=?");
+        WHERE id=?");
 
     $stmt->execute([$first_name,$last_name,$age,$grade,$enrollment_date,$gender,$email,$image_path,$id]);
 
@@ -118,7 +118,7 @@ if(isset($_POST['update'])) {
 
 <form method="POST" enctype="multipart/form-data">
 
-    <input type="hidden" name="id" value="<?php echo $student['student_id']; ?>">
+    <input type="hidden" name="id" value="<?php echo $student['id']; ?>">
 
     First Name:<br>
     <input type="text" name="first_name" value="<?php echo $student['first_name']; ?>"><br>
