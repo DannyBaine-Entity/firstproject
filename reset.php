@@ -1,5 +1,5 @@
 <?php
-  include "conn.php";
+  include "connection.php";
 
 try {
  
@@ -11,7 +11,7 @@ try {
 
 
           // CHECK IF EMAIL EXISTS
-            $stmtEmail = $conn->prepare("SELECT * FROM users WHERE email = ?");
+            $stmtEmail = $pdo->prepare("SELECT * FROM users WHERE email = ?");
             $stmtEmail->execute([$email]);
             $emailExists = $stmtEmail->fetch(PDO::FETCH_ASSOC);
 
@@ -22,7 +22,7 @@ try {
         else {
             if($new_password == $confirm_password) {
                 $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+                $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
                 $stmt->execute([$hashed_password, $email]);
                 echo "<script>
                 alert('Password reset successfully!');
