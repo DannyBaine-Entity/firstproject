@@ -2,7 +2,7 @@
 include 'db.php';
 
 try {
-    $stmt = $conn->prepare("SELECT * FROM contacts ORDER BY id DESC");
+    $stmt = $conn->prepare("SELECT * FROM contacts ORDER BY id ASC");
     $stmt->execute();
     $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -89,10 +89,10 @@ try {
             <?php if (!empty($contacts)): ?>
                 <?php foreach ($contacts as $contact): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($contact['id']); ?></td>
-                        <td><?php echo htmlspecialchars($contact['name']); ?></td>
-                        <td><?php echo htmlspecialchars($contact['email']); ?></td>
-                        <td><?php echo htmlspecialchars($contact['phone']); ?></td>
+                        <td><?php echo ($contact['id']); ?></td>
+                        <td><?php echo ($contact['name']); ?></td>
+                        <td><?php echo ($contact['email']); ?></td>
+                        <td><?php echo ($contact['phone']); ?></td>
                         <td class="actions">
                             <a href="update.php?id=<?php echo $contact['id']; ?>" class="edit">Edit</a>
                             <a href="delete.php?id=<?php echo $contact['id']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this contact?')">Delete</a>
