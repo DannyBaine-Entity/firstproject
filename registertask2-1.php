@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+include 'connection2.php';
 
 try {
 
@@ -19,8 +20,7 @@ try {
 
             echo "<script>alert('All required fields must be filled!');</script>";
 
-        } 
-        else {
+        } else {
             // CHECK IF EMAIL EXISTS
             $stmtEmail = $pdo2->prepare("SELECT * FROM students_info WHERE email = ?");
             $stmtEmail->execute([$email]);
@@ -215,9 +215,10 @@ try {
         <label for="email">Email</label>
         <input type="email" name="email" id="email"><br><br>
 
-        <!-- Image (Optional) -->
-        <label for="image">Image:</label>
-        <input type="file" name="image" id="image" accept="image/*"><br><br>
+        <!-- Image Upload -->
+         <form method="POST" enctype="multipart/form-data">
+        <label for="image">Profile Image:</label>
+        <input type="file" name="image" id="image" required><br><br>
 
 
         <!-- Submit Button -->
