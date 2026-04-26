@@ -1,6 +1,8 @@
 <?php
 // Database connection settings for second database
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $host = 'localhost';
 $dbname = 'school_records';

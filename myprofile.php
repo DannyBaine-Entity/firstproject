@@ -31,44 +31,117 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
         }
 
         /* SIDEBAR */
         .sidebar {
-            width: 200px;
+            width: 250px;
             height: 100vh;
-            background-color: #333;
+            background-color: #2c3e50;
             color: white;
             position: fixed;
-            padding-top: 20px;
+            padding-top: 30px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
         }
 
         .sidebar h2 {
             text-align: center;
+            padding: 20px;
+            font-size: 20px;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 20px;
         }
 
         .sidebar a {
             display: block;
             color: white;
-            padding: 12px;
+            padding: 15px 20px;
             text-decoration: none;
+            transition: background-color 0.3s ease;
         }
 
         .sidebar a:hover {
-            background-color: #575757;
+            background-color: #34495e;
         }
 
         /* MAIN CONTENT */
         .main {
-            margin-left: 200px;
-            padding: 20px;
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .main h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .main h3 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 22px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* PROFILE IMAGE */
+        .main img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* PROFILE INFO */
+        .main p {
+            color: #555;
+            font-size: 16px;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .main p strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* LINKS */
+        .main a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .main a:hover {
+            background-color: #2980b9;
         }
 
         .logout {
-            color: red;
+            background-color: #e74c3c;
+        }
+
+        .logout:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
@@ -82,9 +155,7 @@ try {
     <h1>My Profile</h1>
 
     <h3>Profile Information</h3>
-    <?php if($student['image']) { ?>
-        <img src="<?php echo $student['image']; ?>" alt="Profile Image" width="150"><br><br>
-    <?php } ?>
+    <img src="<?php echo $student['image'] ?: 'default-profile.jpg'; ?>" alt="Profile Image" width="150"><br><br>
     
     <p><strong>Student ID:</strong> <?php echo $student['id']; ?></p>
     <p><strong>First Name:</strong> <?php echo $student['first_name']; ?></p>

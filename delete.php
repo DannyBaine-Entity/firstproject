@@ -1,5 +1,5 @@
 <?php
-include "conn2.php";
+include "connection2.php";
 try {
     
 
@@ -9,7 +9,7 @@ try {
         $id = $_GET['id'];
 
         // Delete query
-        $stmt = $conn->prepare("DELETE FROM students_info WHERE student_id = ?");
+        $stmt = $pdo2->prepare("DELETE FROM students_info WHERE id = ?");
         $stmt->execute([$id]);
 
         echo "<script>

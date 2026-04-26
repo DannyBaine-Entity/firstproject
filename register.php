@@ -3,10 +3,9 @@
 // Simple Registration with Email Check + JS Alert
 // ==========================================
 
+include "connection.php"; // Database connection
+
 try {
-    // DATABASE CONNECTION
-    $conn = new PDO("mysql:host=localhost;dbname=testdb", "root", "");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if(isset($_POST['submit'])) {
 
@@ -22,13 +21,19 @@ try {
         elseif(strlen($password) < 6) {
             echo "<script>alert('Password must be at least 6 characters!');</script>"; //CHECKS IF THE PASSWORD IS LESS THAN 6
         }
-        elseif(!preg_match('/[A-Z]/', $password) || !preg_match('/[^a-zA-Z0-9]/', $password))
-            {
+        elseif(!preg_match('/[A-Z]/', $password) || !preg_match('/[^a-zA-Z0-9]/', $password)){
                 echo "<script>alert('Password must be at least one capital and special character');</script>";
-            }
+        }
+        elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo "<script>alert('Invalid email format!');</script>";
+        }
+        elseif($_POST['password'] !== $_POST['confirm_password']) {
+            echo "<script>alert('Passwords do not match!');</script>";
+        }
+
         else {
             // CHECK IF EMAIL EXISTS
-            $stmtEmail = $conn->prepare("SELECT * FROM users WHERE email = ?");
+            $stmtEmail = $pdo->prepare("SELECT * FROM users WHERE email = ?");
             $stmtEmail->execute([$email]);
             $emailExists = $stmtEmail->fetch(PDO::FETCH_ASSOC);
 
@@ -40,7 +45,7 @@ try {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
                 $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-                $stmtInsert = $conn->prepare($sql);
+                $stmtInsert = $pdo->prepare($sql);
                 $stmtInsert->execute([$username, $email, $hashedPassword]);
 
                 // SUCCESS MESSAGE + REDIRECT
@@ -59,26 +64,110 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html>
-<head><title>Register</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .register-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .register-container h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .register-container label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .register-container input[type="text"],
+        .register-container input[type="email"],
+        .register-container input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .register-container input[type="text"]:focus,
+        .register-container input[type="email"]:focus,
+        .register-container input[type="password"]:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .register-container input[type="submit"] {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .register-container input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
 <body>
 
-<h2>Register</h2>
+<div class="register-container">
+    <h2>Register</h2>
 
-<form method="post">
+    <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required>
 
-    Username:<br>
-    <input type="text" name="username" required><br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
 
-    Email:<br>
-    <input type="email" name="email" required><br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
 
-    Password:<br>
-    <input type="password" name="password" required><br><br>
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" name="confirm_password" id="confirm_password" required>
 
-    <input type="submit" name="submit" value="Register">
-
-</form>
+        <input type="submit" name="submit" value="Register">
+    </form>
+</div>
 
 </body>
 </html>
