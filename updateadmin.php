@@ -29,28 +29,28 @@ if(isset($_POST['update'])) {
     $id = $_POST['id'];
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
+    $image_path = $user['image']; // default to existing
 
-    if(empty($username) || empty($email)) {
-        echo "<script>alert('Username and email are required.');</script>";
-    } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Invalid email format.');</script>";
-    } else {
-        // CHECK IF EMAIL EXISTS FOR OTHER USERS
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND id != ?");
-        $stmt->execute([$email, $id]);
-        if($stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo "<script>alert('Email already exists.');</script>";
-        } else {
-            $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ? WHERE id = ? AND rolez = 1");
-            $stmt->execute([$username, $email, $id]);
+    if(isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["image"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
-            echo "<script>
-                    alert('Admin updated successfully!');
-                    window.location.href = 'createadmin.php';
-                  </script>";
+        // Check if it's an image and allowed format
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        $allowed = array("jpg", "jpeg", "png", "gif");
+        if($check !== false && in_array($imageFileType, $allowed) && move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $image_path = $target_file;
         }
+        }
+        $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ?, image = ? WHERE id = ? AND rolez = 1");
+        $stmt->execute([$username, $email, $image_path, $id]);
+
+        echo "<script>
+                alert('Admin updated successfully!');
+                window.location.href = 'createadmin.php';
+                </script>";
     }
-}
 
 ?>
 

@@ -3,8 +3,8 @@ include 'connection.php';
 include 'connection2.php';
 
 try {
+    if (isset($_POST['submit'])) {
 
- if(isset($_POST['submit'])) {
 
         // GET FORM DATA
         $first_name = trim($_POST['first_name']);
@@ -14,6 +14,21 @@ try {
         $enrollment_date = $_POST['enrollment_date'];
         $gender = $_POST['gender'];
         $email = $_POST['email'];
+
+        // HANDLE IMAGE UPLOAD
+        $image_path = '';
+        if(isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["image"]["name"]);
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+            // Check if it's an image and allowed format
+            $check = getimagesize($_FILES["image"]["tmp_name"]);
+            $allowed = array("jpg", "jpeg", "png", "gif");
+            if($check !== false && in_array($imageFileType, $allowed) && move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                $image_path = $target_file;
+            }
+        }
 
         // VALIDATION
         if (empty($first_name) || empty($last_name) || empty($age) || empty($grade) || empty($enrollment_date) || empty($gender)) {
@@ -39,7 +54,7 @@ try {
 
             $stmt = $pdo2->prepare($sql);
 
-          $stmt->execute([$first_name, $last_name, $age, $grade, $enrollment_date, $gender, $email, $image]);
+          $stmt->execute([$first_name, $last_name, $age, $grade, $enrollment_date, $gender, $email, $image_path]);
             // SUCCESS ALERT
             echo "<script>
                     alert('Student added successfully!'); 
@@ -182,7 +197,7 @@ try {
 <!-- MAIN CONTENT -->
 <div class="main">
     <h1>Add Student to the System</h1>
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
     
         <!-- First Name -->
         <label for="first_name">First Name:</label>
@@ -216,7 +231,6 @@ try {
         <input type="email" name="email" id="email"><br><br>
 
         <!-- Image Upload -->
-         <form method="POST" enctype="multipart/form-data">
         <label for="image">Profile Image:</label>
         <input type="file" name="image" id="image" required><br><br>
 

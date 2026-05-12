@@ -1,23 +1,12 @@
 <?php
 
+include "connection2.php";
+
 try {
-    include 'connection2.php';
-
-    $search = '';
-    if(!empty($_GET['search'])) {
-        $search = $_GET['search'];
-    }
-
-    if($search !== '') {
-        $like = '%' . $search . '%';
-        $stmt = $pdo2->prepare("SELECT * FROM students_info WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ORDER BY first_name ASC");
-        $stmt->execute([$like, $like, $like]);
-        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } else {
-        $stmt = $pdo2->prepare("SELECT * FROM students_info ORDER BY first_name ASC");
-        $stmt->execute();
-        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // FETCH ALL STUDENTS
+    $stmt = $pdo2->prepare("SELECT * FROM students_info ");
+    $stmt->execute();
+    $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
@@ -79,13 +68,9 @@ try {
         th, td {
             padding: 10px;
         }
-
-        /* Simple search */
-        form { margin-bottom: 10px; }
-        input[type="text"] { padding: 6px; width: 200px; }
-        button { padding: 6px 12px; cursor: pointer; }
     </style>
 </head>
+
 <body>
 
 <!-- SIDEBAR -->
@@ -93,16 +78,12 @@ try {
 
 <!-- MAIN CONTENT -->
 <div class="main">
-    <h2>All Students</h2>
 
-    <!-- Simple search form -->
-    <form method="get" action="">
-        <input type="text" name="search" placeholder="Search name or email..." value="<?= htmlspecialchars($search) ?>">
-        <button type="submit">Search</button>
-    </form>
+    <h2>All Students</h2>
 
     <table>
         <tr>
+
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
@@ -116,11 +97,14 @@ try {
         </tr>
 
         <?php
-        $counter = 1;
+        //$counter = 1;
         if(!empty($students)) {
+
             foreach($students as $row) {
+
                 echo "<tr>";
-                echo "<td>" . $counter . "</td>";
+                
+                echo "<td>" . $row['id'] . "</td>"; // ✅ ID column
                 echo "<td>" . $row['first_name'] . "</td>";
                 echo "<td>" . $row['last_name'] . "</td>";
                 echo "<td>" . $row['age'] . "</td>";
@@ -128,19 +112,24 @@ try {
                 echo "<td>" . $row['enrollment_date'] . "</td>";
                 echo "<td>" . $row['gender'] . "</td>";
                 echo "<td>" . $row['email'] . "</td>";
-                echo "<td>" . (isset($row['image']) && $row['image'] ? "<img src='" . $row['image'] . "' width='50'>" : "No Image") . "</td>";
+                echo "<td>" . ($row['image'] ? "<img src='" . $row['image'] . "' width='50' alt='Image'>" : "No Image") . "</td>";
+
                 echo "<td>
-                        <a href='update.php?id=" . $row['student_id'] . "'>Update</a> |
-                        <a href='delete.php?id=" . $row['student_id'] . "'>Delete</a>
+                        <a href='update.php?id=".$row['id']."'>Update</a> |
+                        <a href='delete.php?id=".$row['id']."'>Delete</a>
                       </td>";
+
                 echo "</tr>";
-                $counter++;
+                // $counter++;
             }
+
         } else {
             echo "<tr><td colspan='10'>No records found</td></tr>";
         }
         ?>
+
     </table>
+
 </div>
 
 </body>
