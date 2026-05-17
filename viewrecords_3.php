@@ -1,40 +1,23 @@
 <?php
 
-$limit = 5;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-if($page < 1) $page = 1;
-$offset = ($page - 1) * $limit;
-
-$students = [];
-$total = 0;
-$search = '';
-$pages = 1;
-
 try {
     include 'connection2.php';
 
+    $search = '';
     if(!empty($_GET['search'])) {
         $search = $_GET['search'];
     }
 
     if($search !== '') {
         $like = '%' . $search . '%';
-        $stmt = $pdo2->prepare("SELECT * FROM students_info WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ORDER BY first_name ASC LIMIT $limit OFFSET $offset");
+        $stmt = $pdo2->prepare("SELECT * FROM students_info WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ORDER BY first_name ASC");
         $stmt->execute([$like, $like, $like]);
         $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $countStmt = $pdo2->prepare("SELECT COUNT(*) FROM students_info WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ?");
-        $countStmt->execute([$like, $like, $like]);
-        $total = $countStmt->fetchColumn();
     } else {
-        $stmt = $pdo2->prepare("SELECT * FROM students_info ORDER BY first_name ASC LIMIT $limit OFFSET $offset");
+        $stmt = $pdo2->prepare("SELECT * FROM students_info ORDER BY first_name ASC");
         $stmt->execute();
         $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $total = $pdo2->query("SELECT COUNT(*) FROM students_info")->fetchColumn();
     }
-
-    $pages = ceil($total / $limit);
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
@@ -97,41 +80,27 @@ try {
             padding: 10px;
         }
 
-         /* Simple search */
-         form { margin-bottom: 10px; }
-         input[type="text"] { padding: 6px; width: 200px; }
+        /* Simple search */
+        form { margin-bottom: 10px; }
+        input[type="text"] { padding: 6px; width: 200px; }
         button { padding: 6px 12px; cursor: pointer; }
-
-        /* Simple pagination */
-        .simple-nav {
-            margin: 10px 0;
-            padding: 5px 0;
-        }
-        .simple-nav a {
-            padding: 5px 15px;
-            margin-right: 5px;
-            text-decoration: none;
-            background: #ddd;
-            border-radius: 3px;
-        }
-        .simple-nav a:hover { background: #ccc; }
-        .simple-nav span { color: #666; margin: 0 10px; }
-     </style>
+    </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
 <?php include 'sidebar.php'; ?>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
-        <h2>All Students</h2>
+<!-- MAIN CONTENT -->
+<div class="main">
+    <h2>All Students</h2>
 
-        <!-- Simple search form -->
-        <form method="get" action="" style="margin-bottom: 10px;">
-            <input type="text" name="search" placeholder="Search name or email..." value="<?= htmlspecialchars($search) ?>">
-            <button type="submit">Search</button>
-        </form>
+    <!-- Simple search form -->
+    <form method="get" action="">
+        <input type="text" name="search" placeholder="Search name or email..." value="<?= htmlspecialchars($search) ?>">
+        <button type="submit">Search</button>
+    </form>
+
     <table>
         <tr>
             <th>ID</th>
@@ -147,11 +116,11 @@ try {
         </tr>
 
         <?php
+        $counter = 1;
         if(!empty($students)) {
-            $i = 1;
             foreach($students as $row) {
                 echo "<tr>";
-                echo "<td>" . ($offset + $i) . "</td>";
+                echo "<td>" . $counter . "</td>";
                 echo "<td>" . $row['first_name'] . "</td>";
                 echo "<td>" . $row['last_name'] . "</td>";
                 echo "<td>" . $row['age'] . "</td>";
@@ -159,34 +128,19 @@ try {
                 echo "<td>" . $row['enrollment_date'] . "</td>";
                 echo "<td>" . $row['gender'] . "</td>";
                 echo "<td>" . $row['email'] . "</td>";
-                echo "<td>" . ($row['image'] ? "<img src='" . $row['image'] . "' width='50'>" : "No Image") . "</td>";
+                echo "<td>" . (isset($row['image']) && $row['image'] ? "<img src='" . $row['image'] . "' width='50'>" : "No Image") . "</td>";
                 echo "<td>
                         <a href='update.php?id=" . $row['id'] . "'>Update</a> |
                         <a href='delete.php?id=" . $row['id'] . "'>Delete</a>
                       </td>";
                 echo "</tr>";
-                $i++;
+                $counter++;
             }
         } else {
             echo "<tr><td colspan='10'>No records found</td></tr>";
         }
         ?>
     </table>
-
-    <!-- Simple pagination (bottom) -->
-    <div class="simple-nav">
-        <?php if($page > 1): ?>
-            <a href="?page=1<?= $search ? '&search=' . urlencode($search) : '' ?>">First</a>
-            <a href="?page=<?= $page - 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?>">Previous</a>
-        <?php endif; ?>
-
-        <span>Page <?= $page ?> of <?= $pages ?></span>
-
-        <?php if($page < $pages): ?>
-            <a href="?page=<?= $page + 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?>">Next</a>
-            <a href="?page=<?= $pages ?><?= $search ? '&search=' . urlencode($search) : '' ?>">Last</a>
-        <?php endif; ?>
-    </div>
 </div>
 
 </body>
