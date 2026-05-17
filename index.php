@@ -80,7 +80,7 @@ try {
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -94,6 +94,11 @@ try {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .login-container:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .login-container h2 {
@@ -101,6 +106,17 @@ try {
             margin-bottom: 30px;
             text-align: center;
             font-size: 28px;
+            font-weight: 700;
+        }
+
+        .login-container h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            margin: 15px auto 0;
+            border-radius: 2px;
         }
 
         .login-container label {
@@ -108,6 +124,7 @@ try {
             color: #2c3e50;
             font-weight: 600;
             margin-bottom: 8px;
+            margin-top: 20px;
             font-size: 14px;
         }
 
@@ -115,7 +132,7 @@ try {
         .login-container input[type="password"] {
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #bdc3c7;
             border-radius: 5px;
             font-size: 16px;
@@ -126,6 +143,7 @@ try {
         .login-container input[type="password"]:focus {
             outline: none;
             border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
         }
 
         .login-container input[type="submit"] {
@@ -138,12 +156,14 @@ try {
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             margin-top: 10px;
         }
 
         .login-container input[type="submit"]:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .login-container p {
